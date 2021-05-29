@@ -27,6 +27,15 @@ Create and Register New App (Component of Project)
 				admin.site.register(<Component_Name>)
 
 
+Create a View and Add URL to that View
+
+1. Under Component -> views.py :    Define a View Class. Return httpResponse(html string)
+2. Under urls.py:
+			from component.views import view_class
+			
+			add url pattern as such:
+				path('path name', view_class, name='name')
+
 
 
 Notes:
