@@ -3,5 +3,6 @@ from .models import Menu
 
 
 class MenuSerializer(serializers.ModelSerializer):
-    model = Menu
-    fields = ['created', 'menu_item', 'price']
+    class Meta:
+        model = Menu
+        fields = ['created', 'menu_item', 'price']
