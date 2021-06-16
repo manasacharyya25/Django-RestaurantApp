@@ -1,201 +1,271 @@
 # Web Dev with Django Rest Framework
+
 ## Contents
+
 - Dev Environment Setup
 - Django Basics
 - REST API with DRF
 
 ## Dev Environment Setup
+
 - **IDE** Pycharm Community Edition ( Provides Intellisense for Django and DRF Code )
-- **Python Version**  Python 3.7.8
+- **Python Version** Python 3.7.8
 - **Create Python Virtual Environment**
-	```
-	virtualenv .
-	``` 
+  ```
+  virtualenv .
+  ```
 - **Activate Python Virtual Environment**
-	```
-	Scripts\activate
-	```
+  ```
+  Scripts\activate
+  ```
 - **Install Django**
-	```
-	pip install django==3.2.3
-	```
+  ```
+  pip install django==3.2.3
+  ```
 - **Install Django Rest Framework**
-	```
-	pip install djangorestframework==3.12.4
-	```
+  ```
+  pip install djangorestframework==3.12.4
+  ```
 - **Check Installed Packages**
-	```
-	pip freeze
-	```
+  ```
+  pip freeze
+  ```
 
 ## Django Basics
 
 ### Setup Project Skeleton
 
-- Before Starting any Django Project, create a ```src``` folder, that will contain all Project Files.
+- Before Starting any Django Project, create a `src` folder, that will contain all Project Files.
 
 - **Create Django Project**
-	```
-	... activate virtual env ...
-	
-	> cd src
-	> django-admin startproject <project-name> .
-	```
-	Creates a folder called ```<project-name>``` with following contents:
-	-	project-name 
-         -  project-name
-			-	init.py
-			-	asgi.py
-			-	settings.py
-			-	urls.py
-			-	wsgi.py
-		-	manage.py
-		-					
-- **Create a component**  of the Project. (Called App in Django Terms)
-	```
-	... activate virtual env ...
-	
-	> cd src\<project-name>
-	> python manage.py startapp <app-name>
-	> django-admin startapp <app-name> .
-	```
-	Creates a folder called ```<app-name>```  with following contents:
-	-	migrations/
-	-	init.py
-	-	admin.py
-	-	apps.py
-	-	models.py
-	-	tests.py
-	-	views.py
+
+  ```
+  ... activate virtual env ...
+
+  > cd src
+  > django-admin startproject <project-name> .
+  ```
+
+  Creates a folder called `<project-name>` with following contents:
+
+  - project-name
+    - project-name
+    - init.py
+    - asgi.py
+    - settings.py
+    - urls.py
+    - wsgi.py
+    - manage.py
+    -
+
+- **Create a component** of the Project. (Called App in Django Terms)
+
+  ```
+  ... activate virtual env ...
+
+  > cd src\<project-name>
+  > python manage.py startapp <app-name>
+  > django-admin startapp <app-name> .
+  ```
+
+  Creates a folder called `<app-name>` with following contents:
+
+  - migrations/
+  - init.py
+  - admin.py
+  - apps.py
+  - models.py
+  - tests.py
+  - views.py
 
 - **Register Component** in Project Settings
-	- Opne src\project-name\project-name\settings.py
-	- Under ```INSTALLED_APPS``` add ```'app-name'```
 
-- While we are at it, include ```rest-framework``` as well under `INSTALLED_APPS``` that was installed during dev env setup phase.
+  - Opne src\project-name\project-name\settings.py
+  - Under `INSTALLED_APPS` add `'app-name'`
+
+- While we are at it, include `rest-framework` as well under `INSTALLED_APPS``` that was installed during dev env setup phase.
 
 - **Create Superuser**
-	Django allows creating a superuser with name, email and password. Using these credentials one can login into admin panel and access secure content within the webapp.
+  Django allows creating a superuser with name, email and password. Using these credentials one can login into admin panel and access secure content within the webapp.
 
-	To create a superuser, execute following in terminal:
-	
-	```
-	> cd src\project-name
-	> python manage.py createsuperuser
-	```
-	
-	This should prompt to update username, email and password. Fill in details and continue.
+  To create a superuser, execute following in terminal:
 
+  ```
+  > cd src\project-name
+  > python manage.py createsuperuser
+  ```
 
--	**Start Django Server**
+  This should prompt to update username, email and password. Fill in details and continue.
 
-	```
-	> cd src\project-name
-	> python manage.py runserver
-	```
+- **Start Django Server**
 
-- The Django server would by default start at ```http:\\localhost:8000```
-	Navigate to ```http:\\localhost:8000\admin```. Type in username and password, that was set in previous step and you should be in the Admin Dashboard.
+  ```
+  > cd src\project-name
+  > python manage.py runserver
+  ```
 
+- The Django server would by default start at `http:\\localhost:8000`
+  Navigate to `http:\\localhost:8000\admin`. Type in username and password, that was set in previous step and you should be in the Admin Dashboard.
 
 ### Django Coding
-Developing any Django Applicaton, would require the follwing steps to be performed :
-	1. Create **Model** classes - The Data Models to store data
+
+Developing any Django Applicaton, would require the follwing steps to be performed : 1. Create **Model** classes - The Data Models to store data
 
 ```
-from django.db import models  
- 
-class Menu(models.Model):  
-    created = models.DateField(auto_now_add=True)  
-    item_name = models.TextField(max_length=10)  
-    item_price = models.IntegerField()  
-  
-    class Meta:  
+from django.db import models
+
+class Menu(models.Model):
+    created = models.DateField(auto_now_add=True)
+    item_name = models.TextField(max_length=10)
+    item_price = models.IntegerField()
+
+    class Meta:
         ordering = ['created']
 ```
 
 2.**Serializers** for that Model - To Serialize and Deserialize models to/from JSON
 
 ```
-from rest_framework import serializers  
-from .models import Menu  
-  
-  
-class MenuSerializer(serializers.ModelSerializer):  
-    class Meta:  
-        model = Menu  
+from rest_framework import serializers
+from .models import Menu
+
+
+class MenuSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Menu
         fields = ['created', 'item_name', 'price']
 ```
 
- 3.  **Migrating Model Changes to DB** - Create Schema for Models in DB
+3.  **Migrating Model Changes to DB** - Create Schema for Models in DB
 
 ```
 > python manage.py makemigrations
 > python manage.py migrate
 ```
 
-4. **Registering Model into Admin** -  Allow easy manipulation of Models from Django Admin UI
+4. **Registering Model into Admin** - Allow easy manipulation of Models from Django Admin UI
 
 ```
-from django.contrib import admin  
-from .models import Menu  
+from django.contrib import admin
+from .models import Menu
 
 admin.site.register(Menu)
 ```
 
-		 
 ## REST API with DRF
 
-- To Create a REST API, in addition to Models and Serializers created in previous step, we also need to create **Views** ( similar to controller ) and **URL Mappings** ( api endpoints ) to these. 
+- To Create a REST API, in addition to Models and Serializers created in previous step, we also need to create **Views** ( similar to controller ) and **URL Mappings** ( api endpoints ) to these.
 
-	1. **View Class** : Using Generics provided by rest_framework, we can avoid boilerplate code required to setup GET, POST, PUT, DELETE APIs
+  1.  **View Class** : Using Generics provided by rest_framework, we can avoid boilerplate code required to setup GET, POST, PUT, DELETE APIs
 
-		```
-		from rest_framework import generics  
-		from .models import Menu  
-		from .serializers import MenuSerializer
-		  
-		class MenuView(generics.ListAPIView):  
-		    queryset = Menu.objects.all()  
-		    serializer_class = MenuSerializer
-		```
+      ```
+      from rest_framework import generics
+      from .models import Menu
+      from .serializers import MenuSerializer
 
-	2. **URL Configuration**: Create ```urlpatterns``` in ```app.urls.py``` and Include that in ```project -> settings.py -> urlpatterns```
+      class MenuView(generics.ListAPIView):
+          queryset = Menu.objects.all()
+          serializer_class = MenuSerializer
+      ```
 
-		```
-		from django.urls import path  
-		from .views import SnippetsList  
-		from rest_framework.urlpatterns import format_suffix_patterns  
-		  
-		  
-		urlpatterns = [  
-		    path('snippets/', SnippetsList.as_view())  
-		]  
-		  
-		urlpatterns = format_suffix_patterns(urlpatterns)
+  2.  **URL Configuration**: Create `urlpatterns` in `app.urls.py` and Include that in `project -> settings.py -> urlpatterns`
 
-		```
+      ```
+      from django.urls import path
+      from .views import SnippetsList
+      from rest_framework.urlpatterns import format_suffix_patterns
 
-		```
-		from django.contrib import admin  
-		from django.urls import path, include  
-		  
-		urlpatterns = [  
-		    path('admin/', admin.site.urls),  
-		  path('', include('Menu.urls'))  
-		]
-		```
 
-- Also we need to change default **RENDERED and PARSER** Classes, so that we get JSON Response when accessing the APIs. 
-Add following to ```project->settings.py```
+      urlpatterns = [
+          path('snippets/', SnippetsList.as_view())
+      ]
 
-		```
-		REST_FRAMEWORK = {  
-		    'DEFAULT_RENDERER_CLASSES': [  
-		        'rest_framework.renderers.JSONRenderer',  
-		  ],  
-		  'DEFAULT_PARSER_CLASSES': [  
-		        'rest_framework.parsers.JSONParser',  
-		  ]  
-		}
-		```
+      urlpatterns = format_suffix_patterns(urlpatterns)
+
+      ```
+
+      ```
+      from django.contrib import admin
+      from django.urls import path, include
+
+      urlpatterns = [
+          path('admin/', admin.site.urls),
+        path('', include('Menu.urls'))
+      ]
+      ```
+
+- Also we need to change default **RENDERED and PARSER** Classes, so that we get JSON Response when accessing the APIs.
+  Add following to `project->settings.py`
+
+      	```
+      	REST_FRAMEWORK = {
+      	    'DEFAULT_RENDERER_CLASSES': [
+      	        'rest_framework.renderers.JSONRenderer',
+      	  ],
+      	  'DEFAULT_PARSER_CLASSES': [
+      	        'rest_framework.parsers.JSONParser',
+      	  ]
+      	}
+      	```
+
+## REST ENDPOINT AUTHENTICATION
+
+Token based authentication is the goto approach to secure APIs such that it can be accessed by any client. Following steps need to be followed to implement Token Based Authentication in DRF
+
+1. Install `django-rest-auth`
+
+   ```
+   pip install django-rest-auth
+   ```
+
+2. Add following to `INSTALLED_APPS`
+
+   ```
+   'rest_framework.authtoken',
+   'rest_auth',
+   ```
+
+3. Add Default Authenticaiton Class as TokenAuthentication
+
+   ```
+   REST_FRAMEWORK = {
+   	'DEFAULT_AUTHENTICATION_CLASSES': (
+       	'rest_framework.authentication.TokenAuthentication',
+   	),
+   }
+   ```
+
+4. Modify Views You wish to secure with Permission Class:
+
+   ```
+   from rest_framework.permissions import IsAuthenticated
+
+
+   class MenuListView(generics.ListCreateAPIView):
+   	permission_classes = [IsAuthenticated]
+   	queryset = Menu.objects.all()
+   	serializer_class = MenuSerializer
+   ```
+
+5. Add Urls to Allow Creation of Token against user Credentials
+
+   ```
+   	urlpatterns = [
+   		path('rest-auth/', include('rest_auth.urls')),
+   	]
+   ```
+
+6. Make Migrations
+
+   ```
+   python manage.py makemigraitons
+   python manage.py migrate
+   ```
+
+7. Navigate to `rest-auth/login`. Login using superuser credentials. This will return with a Token Key, that can be used to access Secure Views
+
+8. Access Secure API with Authentication Header as such:
+
+   ```
+   Authorization: Token <token-key>
+   ```
